@@ -263,7 +263,7 @@ with st.container():
             })
             try:
                 df_features = gerar_features(df_contas, df_posts)
-                top_features = joblib.load("model/top_46_features.pkl")
+                top_features = joblib.load("top_46_features.pkl")
                 df_features = df_features.reindex(columns=top_features, fill_value=0)
                 classe, probabilidade, X_scaled = preprocessar_e_classificar(df_features)
                 st.success(f"Classe prevista: {classe} \nProbabilidade de ser BOT: {probabilidade:.2f}")
