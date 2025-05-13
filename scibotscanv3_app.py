@@ -337,8 +337,6 @@ with st.container():
     <div class="intro-style">
                 
         📊
-        F1-score (bots): 0,5479
-        Recall (bots): 0,5789                
         AUC ROC: 0,9392                
         Kappa de Cohen: 0,5175
         Acurácia geral: 94,29%
