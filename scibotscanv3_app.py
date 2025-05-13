@@ -150,7 +150,7 @@ def gauge_chart(porcentagem):
     for i in range(100):
         ang1 = 180 * i / 100
         ang2 = 180 * (i + 1) / 100
-        color = plt.cm.RdYlGn_r(i / 100)
+        color = plt.cm.RdYlGn(i / 100)
         wedge = Wedge(center=(0, 0), r=1, theta1=ang1, theta2=ang2, width=0.3, color=color)
         ax.add_patch(wedge)
 
@@ -190,39 +190,28 @@ st.markdown("<h1 style='text-align: center; color: #004080;'>Welcome to SciBotSc
 st.markdown("<h4 style='text-align: center;'>A bot detection tool for academic article postings</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-#st.subheader("Insira os dados da conta e dos posts")
 # --------------------
 # Início do formulário estilizado
 # --------------------
 with st.container():
-    #st.markdown('<div class="input-section"><h3>🔍 Classifique uma nova conta 🤖 vs 👤'
-    
     st.markdown("""
         <div class="input-section">
             <h3 style='text-align:center; color: #004080; margin-bottom: 0;'>🔍 Classifique uma nova conta 🤖 vs 👤</h3>
             </div>
     """, unsafe_allow_html=True)
+    st.subheader("Insira os dados da conta e dos posts")
     
-    # Dados da conta (df_contas)
-    #nome = st.text_input("🔍Nome do perfil (NOME)")
-    #account = st.text_input("Account (username)")
-    #qtd_posts = st.number_input("Quantidade total de posts (QTDPOSTS)", min_value=1)
-    #qtd_subarea = st.number_input("Quantidade de subáreas (QTDSUBAREA)", min_value=0)
-    #qtd_grandearea = st.number_input("Quantidade de grandes áreas (QTDGRANDEAREA)", min_value=0)
-    #qtd_doi = st.number_input("Quantidade de DOIs compartilhados (QTDDOI)", min_value=0)
-    #qtd_seguidores = st.number_input("Quantidade de Seguidores (QTDSEGUIDORES)", min_value=0)
-
     # Organizar em duas colunas
     col1, col2, col3 = st.columns(3)
     with col1:
         nome = st.text_input("Nome do perfil")
         qtd_posts = st.number_input("Quantidade total de posts", min_value=1)
-        qtd_grandearea = st.number_input("Quantidade de grandes áreas", min_value=0)
+        qtd_grandearea = st.number_input("Quantidade de grandes áreas", min_value=1)
         
     with col2:
         account = st.text_input("Account")
-        qtd_doi = st.number_input("Quantidade de DOIs compartilhados", min_value=0)
-        qtd_subarea = st.number_input("Quantidade de subáreas", min_value=0)
+        qtd_doi = st.number_input("Quantidade de DOIs compartilhados", min_value=1)
+        qtd_subarea = st.number_input("Quantidade de subáreas", min_value=1)
 
     with col3:
         qtd_seguidores = st.number_input("Quantidade de Seguidores", min_value=0)
@@ -235,14 +224,15 @@ with st.container():
     with c2:
         datas = st.text_area("Datas das postagens (ex: 2024-05-08), uma por linha")
 
-    postagens = st.text_area("Cole de 5 a 10 postagens, separadas por quebra de linha")
+    postagens = st.text_area(f"Cole a(s) {qtd_posts} postagem(ns), separada(s) por quebra de linha")
+
 
     if st.button("Get Started 🚀"):
         lista_posts = [p.strip() for p in postagens.split('\n') if p.strip()]
         lista_datas = [d.strip() for d in datas.split('\n') if d.strip()]
         lista_horas = [h.strip() for h in horarios.split('\n') if h.strip()]
 
-        if len(lista_posts) == len(lista_datas) == len(lista_horas) and len(lista_posts) >= 3:
+        if len(lista_posts) == len(lista_datas) == len(lista_horas) and len(lista_posts) == qtd_posts: # tem que ser igual a quantidade de posts
 
             # 1. Criar df_contas
             df_contas = pd.DataFrame([{
@@ -266,19 +256,8 @@ with st.container():
                 top_features = joblib.load("top_46_features.pkl")
                 df_features = df_features.reindex(columns=top_features, fill_value=0)
                 classe, probabilidade, X_scaled = preprocessar_e_classificar(df_features)
-                st.success(f"Classe prevista: {classe} \nProbabilidade de ser BOT: {probabilidade:.2f}")
-                
                 percentual = probabilidade * 100
-                st.markdown(f"""
-                <div style='margin: 10px 0;'>
-                    <div style='font-weight: bold; color: #333;'>🧪 Probabilidade de ser BOT: {percentual:.1f}%</div>
-                    <div style='background-color: #eee; border-radius: 10px; overflow: hidden; height: 24px;'>
-                        <div style='width: {percentual:.1f}%; background: linear-gradient(90deg, #f66, #f00); height: 100%; text-align: right; padding-right: 10px; color: white; font-weight: bold;'>
-                            {percentual:.0f}%
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.success(f"Classe prevista: {classe} \nProbabilidade: {percentual:.2f}")
                 
                 # Interface Streamlit               
                 st.subheader("Visualização da probabilidade - Gráfico Meia-Lua")
@@ -288,7 +267,7 @@ with st.container():
             except Exception as e:
                 st.error(f"Erro ao processar os dados: {e}")
         else:
-            st.error("As listas de postagens, datas e horários devem ter o mesmo tamanho e conter pelo menos 3 registros.")
+            st.error("As listas de postagens, datas e horários devem ter o mesmo tamanho e conter o numero de registros igual a quantidade de posts.")
 
 # --------------------
 # Cabeçalho institucional (estilo acadêmico visualmente elegante)
@@ -348,20 +327,24 @@ with st.container():
         margin-top: 0
     }
     </style>
+                
     <div class="intro-style">
-        O SciBotScan é um modelo de inteligência artificial desenvolvido com base em um rigoroso processo de rotulagem e classificação de contas da plataforma X (antigo Twitter), com o objetivo de identificar contas humanas e bots que divulgam artigos científicos. A base de dados foi construída por meio da integração de algoritmos automáticos e fontes reconhecidas da literatura, complementada por uma verificação manual de mais de 13 mil contas. Ao final desse processo, foram identificadas 822 contas de bots e 12.945 contas humanas, com mais de 67 mil postagens analisadas. O dataset rotulado está disponível em:xxxxxx.<br><br>
-        O modelo de classificação utiliza o algoritmo XGBoost e foi treinado com 46 features preditivas, considerando características de atividade, textualidade, comportamento temporal e estrutura dos nomes de usuário. Os principais indicadores de desempenho obtidos foram:          
+        <strong style="font-size: 1.5em;">Sobre o SciBotScan: Desenvolvimento e Desempenho do Modelo:</strong><br><br>
+        O SciBotScan é um modelo de inteligência artificial desenvolvido com base em um rigoroso processo de rotulagem e classificação de contas da plataforma X (antigo Twitter), com o objetivo de identificar contas humanas e bots que divulgam artigos científicos. A base de dados foi construída por meio da integração de algoritmos automáticos e fontes reconhecidas da literatura, complementada por uma verificação manual de mais de 13 mil contas. Ao final desse processo, foram identificadas 822 contas de bots e 12.945 contas humanas, com mais de 67 mil postagens analisadas. O dataset rotulado está disponível em: xxxxxx.<br><br>
+        O modelo de classificação utiliza o algoritmo XGBoost e foi treinado com 46 features preditivas, considerando características de atividade, textualidade, comportamento temporal e estrutura dos nomes de usuário. Os principais indicadores de desempenho obtidos foram:
     </div>
+                
     <div class="intro-style">
                 
-                📊
-                F1-score (bots): 0,5479
-                Recall (bots): 0,5789                
-                AUC ROC: 0,9392                
-                Kappa de Cohen: 0,5175
-                Acurácia geral: 94,29%
+        📊
+        F1-score (bots): 0,5479
+        Recall (bots): 0,5789                
+        AUC ROC: 0,9392                
+        Kappa de Cohen: 0,5175
+        Acurácia geral: 94,29%
         
-  </div> 
+    </div> 
+                
     <div class="intro-style">           
         A análise de importância das variáveis (<strong>SHAP</strong>) revelou que os fatores mais relevantes para a predição incluem: número total de postagens, frequência entre postagens, uso de exclamações, sentimento textual e número de seguidores.<br><br>
         Todos os artefatos do modelo — classificador treinado, scaler, imputador, threshold e lista de features — foram salvos e podem ser utilizados diretamente nesta interface para classificação automática de novas contas. Acesse: xxxxxxxxxxxxxxxxxxxxx.
