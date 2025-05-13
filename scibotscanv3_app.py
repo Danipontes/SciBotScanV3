@@ -337,6 +337,7 @@ with st.container():
     <div class="intro-style">
                 
         📊
+        
         AUC ROC: 0,9392                
         Kappa de Cohen: 0,5175
         Acurácia geral: 94,29%
