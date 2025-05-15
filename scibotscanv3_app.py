@@ -185,7 +185,7 @@ def preprocessar_e_classificar(df_features):
 st.set_page_config(page_title="SciBotScan", layout="centered")
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.image("SciBotScan_logo.png", width=300)
+    st.image("SciBotScan_logo.png", width=400)
 st.markdown("<h1 style='text-align: center; color: #004080;'>Welcome to SciBotScan</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center;'>A bot detection tool for academic article postings</h4>", unsafe_allow_html=True)
 st.markdown("---")
