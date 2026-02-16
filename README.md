@@ -1,7 +1,12 @@
-🔗 https://scibotscanv3.streamlit.app/
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-brightgreen)](https://scibotscanv3.streamlit.app/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18664634.svg)](https://doi.org/10.5281/zenodo.18664634)
+
+
 # SciBotScanV3 
 
 ## An Explainable Machine Learning Architecture for Altmetric Account Classification on X
+
+DOI: 10.5281/zenodo.18664634
 
 SciBotScan is an explainable supervised machine learning architecture designed to classify altmetric accounts on the X platform (formerly Twitter) as automated (bots) or human-operated accounts, with a specific focus on scientific article dissemination.
 
@@ -69,11 +74,9 @@ The dataset was curated through manual validation and cross-referenced with esta
 
 If you use SciBotScanV3 in academic research, please cite:
 
-Pontes, D. P. N., & Maricato, J. M. (2026).
-SciBotScanV3: An Explainable Machine Learning Architecture for Altmetric Account Classification on X (Version 1.0.0) [Software]. Zenodo.
-DOI: 10.xxxx/zenodo.xxxxxx
-
----
+Pontes, D. P. N., & Maricato, J. M. (2026).  
+SciBotScanV3: An Explainable Machine Learning Architecture for Altmetric Account Classification on X (Version 1.0.0) [Software]. Zenodo.  
+https://doi.org/10.5281/zenodo.18664634
 
 ## License
 
